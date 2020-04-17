@@ -35,7 +35,6 @@ class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase
                 { error -> onError(error) })
     }
 
-
     /**
      *  Hide progress bar in UI
      */
