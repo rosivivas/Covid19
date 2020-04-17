@@ -3,6 +3,7 @@ package com.rosario.covid19.ui
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,8 @@ import com.rosario.covid19.util.Util
 import com.rosario.covid19.viewModel.HomeViewModel
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Exception
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -21,7 +24,7 @@ import javax.inject.Inject
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityMainBinding
-
+    var selectedDate = ""
 
     @Inject
     lateinit var homeViewModel: HomeViewModel
@@ -60,6 +63,14 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
+        try {
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date: Date = simpleDateFormat.parse(selectedDate)
+            calendar.timeInMillis = date.time
+        } catch (e: Exception) {
+            Log.e("Error", e.message)
+        }
+
         val yearCal = calendar.get(Calendar.YEAR)
         val monthCal = calendar.get(Calendar.MONTH)
         val dayCal = calendar.get(Calendar.DAY_OF_MONTH)
@@ -71,12 +82,14 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, day)
                 tv_date.text = Util().userFormatDate(calendar)
+                selectedDate = Util().dateFormat(calendar)
                 homeViewModel.getReport(Util().dateFormat(calendar))
             },
             yearCal,
             monthCal,
             dayCal
         )
+        //We set max date to yesterday
         datePickerDialog.datePicker.maxDate = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
         datePickerDialog.show()
 
@@ -84,8 +97,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun viewObservers() {
         homeViewModel.error.observe(this, Observer {
-            if (it.toLowerCase().contains("error"))
-                Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, Util().handleError(it, this), Toast.LENGTH_SHORT).show()
         })
     }
 

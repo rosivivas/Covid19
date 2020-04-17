@@ -5,4 +5,8 @@
     <string name="cases_confirmed">Cases Confirmed: %1$,d</string>
     <string name="deaths_confirmed">Deaths Confirmed: %1$,d</string>
     <string name="error">There was an error. Please try again</string>
+    <string name="error_500">Internal server error</string>
+    <string name="error_401">Unauthorized</string>
+
+
 </resources>
