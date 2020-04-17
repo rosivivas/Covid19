@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.rosario.covid19.data.CustomInterceptor
 import com.rosario.covid19.data.DataApi
 import com.rosario.covid19.util.BASE_URL
 import dagger.Module
@@ -21,6 +22,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+/**
+ * Module to inject connection to server
+ */
 @Module
 class NetworkModule {
     @Provides
@@ -37,7 +41,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(application: Application):
+    fun provideOkHttpClient(application: Application, customInterceptor: CustomInterceptor):
             OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -52,6 +56,7 @@ class NetworkModule {
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
+            .addInterceptor(customInterceptor)
             .build()
     }
 
