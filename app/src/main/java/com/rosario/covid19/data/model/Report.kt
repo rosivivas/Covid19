@@ -1,5 +1,8 @@
 package com.rosario.covid19.data.model
 
+/**
+ * Contain attributes to show specific data of COVID-19 by specific date
+ */
 data class Report(
     var date: String,
     var last_update: String,

@@ -8,6 +8,9 @@ import android.view.Window
 import android.view.WindowManager
 import com.rosario.covid19.R
 
+/**
+ * Splash Activity to init app
+ */
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

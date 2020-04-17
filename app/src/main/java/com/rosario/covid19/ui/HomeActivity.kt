@@ -20,7 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-
+/**
+ * Handle UI for Home
+ */
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityMainBinding
@@ -61,6 +63,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     * Show date picker dialog and set max date
+     */
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
         try {
@@ -89,8 +94,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             monthCal,
             dayCal
         )
-        //We set max date to yesterday
-        datePickerDialog.datePicker.maxDate = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
         datePickerDialog.show()
 
     }

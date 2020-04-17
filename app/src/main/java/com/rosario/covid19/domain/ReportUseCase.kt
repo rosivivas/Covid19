@@ -7,12 +7,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.HashMap
 
+/**
+ * Use case to get Report data
+ */
 @Singleton
 class ReportUseCase @Inject constructor(private val dataApi: DataApi) {
 
     fun getReport(date: String): Observable<DataResponse> {
-        val map = HashMap<String, String>()
-        map["date"] = date
         return dataApi.getReport(date)
     }
 }

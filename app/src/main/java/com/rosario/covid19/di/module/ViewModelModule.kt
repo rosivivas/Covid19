@@ -5,6 +5,9 @@ import com.rosario.covid19.viewModel.HomeViewModel
 import dagger.Module
 import dagger.Provides
 
+/**
+ * Module to provide view model class
+ */
 @Module
 class ViewModelModule {
     @Provides
