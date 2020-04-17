@@ -3,7 +3,7 @@
     <string name="app_name">Covid19</string>
     <string name="bt_select_date">Selecciona una fecha</string>
     <string name="cases_confirmed">Casos confirmados: %1$,d</string>
-    <string name="deaths_confirmed">Muertes confirmadas: %1$,d</string>
+    <string name="deaths_confirmed">Cantidad de personas fallecidas: %1$,d</string>
     <string name="error">Hubo un error. Vuelve a intentarlo</string>
     <string name="error_500">Error en el serrvidor</string>
     <string name="error_401">No está autorizado</string>
