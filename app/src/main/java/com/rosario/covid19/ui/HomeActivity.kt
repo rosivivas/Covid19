@@ -3,11 +3,11 @@ package com.rosario.covid19.ui
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.view.View
-import android.widget.DatePicker
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.rosario.covid19.R
 import com.rosario.covid19.databinding.ActivityMainBinding
 import com.rosario.covid19.util.Util
@@ -36,6 +36,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         initBinding()
         prepareElements()
         loadYesterdayData()
+        viewObservers()
     }
 
     private fun initBinding() {
@@ -45,6 +46,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadYesterdayData() {
+        tv_date.text = Util().userFormatDate(calendar)
         homeViewModel.getReport(Util().getYesterdayDate(calendar))
     }
 
@@ -67,7 +69,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, day)
-                tv_date.text = Util().dateFormat(calendar)
+                tv_date.text = Util().userFormatDate(calendar)
                 homeViewModel.getReport(Util().dateFormat(calendar))
             },
             year,
@@ -79,6 +81,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    private fun viewObservers() {
+        homeViewModel.error.observe(this, Observer {
+            if (it.toLowerCase().contains("error"))
+                Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show()
+        })
+    }
 
 }
 

@@ -14,12 +14,13 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase)
-{
+class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase) {
     private lateinit var subscription: Disposable
-    val progressBar: MutableLiveData<Int> = MutableLiveData()
     var response = MutableLiveData<Report>()
     var error = MutableLiveData<String>()
+    var progressBar = MutableLiveData<Int>().apply { postValue(View.GONE) }
+    var dataVisibility = MutableLiveData<Int>().apply { postValue(View.GONE) }
+
 
     fun getReport(date: String) {
         subscription = reportUseCase.getReport(date)
@@ -32,22 +33,27 @@ class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase
     }
 
     private fun hideProgress() {
-        progressBar.value = View.GONE
+        progressBar.postValue(View.GONE)
     }
 
     private fun progressStart() {
-        progressBar.value = View.VISIBLE
+        progressBar.postValue(View.VISIBLE)
+
     }
 
     private fun registerSuccess(result: DataResponse?) {
         response.value = result!!.data
+        dataVisibility.postValue(View.VISIBLE)
     }
 
     private fun onError(result: Throwable) {
         if (result is HttpException) {
             var responseBody = result.response().errorBody() as ResponseBody
             getErrorMessage(responseBody)
+        } else {
+            error.value = result.message
         }
+
     }
 
     private fun getErrorMessage(responseBody: ResponseBody) {

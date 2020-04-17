@@ -20,19 +20,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:visibility="@{viewModel.dataVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Date" />
+            tools:text="Date"/>
 
         <TextView
             android:id="@+id/tv_confirmed"
             style="@style/Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18sp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@{String.format(@string/cases_confirmed, viewModel.response.confirmed)}"
+            android:visibility="@{viewModel.dataVisibility}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_date"
             tools:text="Casos confirmados" />
@@ -42,16 +44,19 @@
             style="@style/Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18sp"
+            android:layout_marginStart="14sp"
             android:text="@{String.format(@string/deaths_confirmed, viewModel.response.deaths)}"
+            android:visibility="@{viewModel.dataVisibility}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_confirmed"
             tools:text="Muertes confirmados" />
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:src="@drawable/home"
+            android:visibility="@{viewModel.dataVisibility}"
             app:layout_constraintBottom_toTopOf="@+id/bt_select_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +70,17 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="@string/bt_select_date"
+            android:visibility="@{viewModel.dataVisibility}"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="@{viewModel.progressBar}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
