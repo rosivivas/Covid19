@@ -21,10 +21,6 @@ import javax.inject.Inject
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityMainBinding
-    var calendar = Calendar.getInstance()
-    var year = calendar.get(Calendar.YEAR)
-    var month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
 
 
     @Inject
@@ -46,8 +42,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadYesterdayData() {
-        tv_date.text = Util().userFormatDate(calendar)
-        homeViewModel.getReport(Util().getYesterdayDate(calendar))
+        tv_date.text = Util().getYesterdayDateUser(Calendar.getInstance())
+        homeViewModel.getReport(Util().getYesterdayDate(Calendar.getInstance()))
     }
 
     private fun prepareElements() {
@@ -63,6 +59,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val yearCal = calendar.get(Calendar.YEAR)
+        val monthCal = calendar.get(Calendar.MONTH)
+        val dayCal = calendar.get(Calendar.DAY_OF_MONTH)
+
         val datePickerDialog = DatePickerDialog(
             this,
             OnDateSetListener { _, year, month, day ->
@@ -72,11 +73,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 tv_date.text = Util().userFormatDate(calendar)
                 homeViewModel.getReport(Util().dateFormat(calendar))
             },
-            year,
-            month,
-            day
+            yearCal,
+            monthCal,
+            dayCal
         )
-        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
         datePickerDialog.show()
 
     }
