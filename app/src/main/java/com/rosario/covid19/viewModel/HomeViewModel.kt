@@ -15,12 +15,12 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase) {
+
     private lateinit var subscription: Disposable
     var response = MutableLiveData<Report>()
     var error = MutableLiveData<String>()
     var progressBar = MutableLiveData<Int>().apply { postValue(View.GONE) }
     var dataVisibility = MutableLiveData<Int>().apply { postValue(View.GONE) }
-
 
     fun getReport(date: String) {
         subscription = reportUseCase.getReport(date)
@@ -38,7 +38,6 @@ class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase
 
     private fun progressStart() {
         progressBar.postValue(View.VISIBLE)
-
     }
 
     private fun registerSuccess(result: DataResponse?) {
@@ -48,7 +47,7 @@ class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase
 
     private fun onError(result: Throwable) {
         if (result is HttpException) {
-            var responseBody = result.response().errorBody() as ResponseBody
+            val responseBody = result.response().errorBody() as ResponseBody
             getErrorMessage(responseBody)
         } else {
             error.value = result.message
@@ -60,7 +59,6 @@ class HomeViewModel @Inject constructor(private val reportUseCase: ReportUseCase
         try {
             val jsonError = JSONObject(responseBody.string())
             error.value = jsonError.getString("detail")
-
         } catch (e: Exception) {
             Log.e("Error", e.message)
         }

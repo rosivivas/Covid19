@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Covid19</string>
+    <string name="bt_select_date">Selecciona una fecha</string>
+    <string name="cases_confirmed">Casos confirmados: %1$,d</string>
+    <string name="deaths_confirmed">Muertes confirmadas: %1$,d</string>
+    <string name="error">Hubo un error. Vuelve a intentarlo</string>
+</resources>
