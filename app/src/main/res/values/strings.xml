@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Covid19</string>
+    <string name="bt_select_date">Select a date</string>
+    <string name="cases_confirmed">Cases Confirmed: %1$d</string>
+    <string name="deaths_confirmed">Deaths Confirmed: %1$d</string>
+
+
+</resources>
