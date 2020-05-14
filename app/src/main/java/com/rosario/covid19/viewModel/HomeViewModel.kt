@@ -1,12 +1,7 @@
 package com.rosario.covid19.viewModel
 
-import android.content.Context
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.*
-import com.rosario.covid19.R
 import com.rosario.covid19.data.model.DataResponse
-import com.rosario.covid19.data.model.Report
 import com.rosario.covid19.domain.ReportUseCase
 import com.rosario.covid19.util.Resource
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -27,24 +23,20 @@ class HomeViewModel @Inject constructor(
     var confirmed = MutableLiveData<String>().apply { postValue("") }
     var deaths = MutableLiveData<String>().apply { postValue("") }
     lateinit var reportLiveData: LiveData<Resource<DataResponse>>
+    var reportMutableLiveData =
+        MutableLiveData<Resource<DataResponse>>().apply { postValue(Resource.loading(data = null)) }
 
     /**
      *  Get data from server
      * @param date
      */
     fun getReport(date: String) {
-        //reportUseCase.getReport(date)
-       reportLiveData = liveData(Dispatchers.IO) {
-            emit(Resource.loading(data = null))
+        viewModelScope.launch {
+            reportMutableLiveData.postValue(Resource.loading(data = null))
             try {
-                emit(Resource.success(data = reportUseCase.getReport(date)))
-            } catch (exception: Exception) {
-                emit(
-                    Resource.error(
-                        data = null,
-                        message = exception.message ?: "Error Occurred!"
-                    )
-                )
+                reportMutableLiveData.postValue(Resource.success(data = reportUseCase.getReport(date)))
+            } catch (e: Exception) {
+                reportMutableLiveData.postValue(Resource.error(data = null, message = e.message.toString()))
             }
         }
     }

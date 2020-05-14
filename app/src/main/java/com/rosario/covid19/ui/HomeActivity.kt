@@ -102,7 +102,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun viewObservers() {
-        homeViewModel.reportLiveData.observe(this, Observer {
+        homeViewModel.reportMutableLiveData.observe(this, Observer {
             it.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -110,7 +110,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         resource.data?.let { report -> showData(report) }
                     }
                     Status.ERROR -> {
-                        progressBarHome.visibility = View.VISIBLE
+                        progressBarHome.visibility = View.GONE
                         Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                     }
                     Status.LOADING -> {
@@ -122,7 +122,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showData(report: DataResponse) {
-        Log.e("Data response", report.data.toString())
+        casesConfirmedText.text = String.format(getString(R.string.cases_confirmed), report.data.confirmedCases)
+        casesDeathText.text = String.format(getString(R.string.deaths_confirmed), report.data.deathsCases)
     }
 }
 
