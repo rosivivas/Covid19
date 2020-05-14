@@ -33,8 +33,8 @@ class HomeViewModel @Inject constructor(
      * @param date
      */
     fun getReport(date: String) {
-        reportUseCase.getReport(date)
-       /* reportLiveData = liveData(Dispatchers.IO) {
+        //reportUseCase.getReport(date)
+       reportLiveData = liveData(Dispatchers.IO) {
             emit(Resource.loading(data = null))
             try {
                 emit(Resource.success(data = reportUseCase.getReport(date)))
@@ -46,7 +46,6 @@ class HomeViewModel @Inject constructor(
                     )
                 )
             }
-        }*/
+        }
     }
-
 }
