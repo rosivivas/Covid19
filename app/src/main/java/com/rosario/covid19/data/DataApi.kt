@@ -1,6 +1,7 @@
 package com.rosario.covid19.data
 
 import com.rosario.covid19.data.model.DataResponse
+import com.rosario.covid19.data.model.Report
 import io.reactivex.Observable
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,6 +13,6 @@ import retrofit2.http.Query
  */
 interface DataApi {
     @GET("reports/total")
-    fun getReport(@Query("date") map: String): Observable<DataResponse>
+    suspend fun getReport(@Query("date") map: String): DataResponse
 
 }

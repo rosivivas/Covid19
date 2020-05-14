@@ -12,5 +12,5 @@ import dagger.Provides
 @Module
 class ViewModelModule {
     @Provides
-    fun homeViewModel(useCase: ReportUseCase, context: Context) = HomeViewModel(useCase, context)
+    fun homeViewModel(useCase: ReportUseCase) = HomeViewModel(useCase)
 }

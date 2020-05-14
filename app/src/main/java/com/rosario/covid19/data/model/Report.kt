@@ -1,18 +1,31 @@
 package com.rosario.covid19.data.model
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * Contain attributes to show specific data of COVID-19 by specific date
  */
 data class Report(
+    @SerializedName("date")
     var date: String = "",
-    var last_update: String = "",
-    var confirmed: Int = 0,
-    var confirmed_diff: Int = 0,
-    var deaths: Int = 0,
-    var deaths_diff: Int = 0,
-    var recovered: Int = 0,
-    var recovered_diff: Int = 0,
-    var active: Int = 0,
-    var active_diff: Int = 0,
-    var fatality_rate: Double = 0.0
+    @SerializedName("last_update")
+    var lastUpdate: String = "",
+    @SerializedName("confirmed")
+    var confirmedCases: Int = 0,
+    @SerializedName("confirmed_diff")
+    var confirmedDiff: Int = 0,
+    @SerializedName("deaths")
+    var deathsCases: Int = 0,
+    @SerializedName("deaths_diff")
+    var deathsDiff: Int = 0,
+    @SerializedName("recovered")
+    var recoveredCases: Int = 0,
+    @SerializedName("recovered_diff")
+    var recoveredDiff: Int = 0,
+    @SerializedName("active")
+    var casesActive: Int = 0,
+    @SerializedName("active_diff")
+    var activeDiff: Int = 0,
+    @SerializedName("fatality_rate")
+    var fatalityRate: Double = 0.0
 )

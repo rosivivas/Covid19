@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.rosario.covid19.R
+import com.rosario.covid19.data.model.DataResponse
 import com.rosario.covid19.databinding.ActivityMainBinding
+import com.rosario.covid19.util.Status
 import com.rosario.covid19.util.Util
 import com.rosario.covid19.viewModel.HomeViewModel
 import dagger.android.AndroidInjection
@@ -47,17 +49,17 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadYesterdayData() {
-        tv_date.text = Util().getYesterdayDateUser(Calendar.getInstance())
+        dateTitleText.text = Util().getYesterdayDateUser(Calendar.getInstance())
         homeViewModel.getReport(Util().getYesterdayDate(Calendar.getInstance()))
     }
 
     private fun prepareElements() {
-        bt_select_date.setOnClickListener(this)
+        buttonDisplayCalendar.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.bt_select_date -> {
+            R.id.buttonDisplayCalendar -> {
                 showDatePicker()
             }
         }
@@ -86,9 +88,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, day)
-                tv_date.text = Util().userFormatDate(calendar)
+                dateTitleText.text = Util().userFormatDate(calendar)
                 selectedDate = Util().dateFormat(calendar)
-                homeViewModel.getReport(Util().dateFormat(calendar))
+                homeViewModel.getReport(selectedDate)
             },
             yearCal,
             monthCal,
@@ -100,11 +102,28 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun viewObservers() {
-        homeViewModel.error.observe(this, Observer {
-            Toast.makeText(this, Util().handleError(it, this), Toast.LENGTH_SHORT).show()
+        homeViewModel.reportLiveData.observe(this, Observer {
+            it.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        progressBarHome.visibility = View.GONE
+                        resource.data?.let { report -> showData(report) }
+                    }
+                    Status.ERROR -> {
+                        progressBarHome.visibility = View.VISIBLE
+                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    }
+                    Status.LOADING -> {
+                        progressBarHome.visibility = View.VISIBLE
+                    }
+                }
+            }
         })
     }
 
+    private fun showData(report: DataResponse) {
+        Log.e("Data response", report.data.toString())
+    }
 }
 
 
