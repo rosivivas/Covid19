@@ -5,10 +5,8 @@ import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.rosario.covid19.data.CustomDataDeserializer
 import com.rosario.covid19.data.CustomInterceptor
 import com.rosario.covid19.data.DataApi
-import com.rosario.covid19.data.model.DataResponse
 import com.rosario.covid19.util.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -37,7 +35,6 @@ class NetworkModule {
     @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
-            .registerTypeAdapter(DataResponse::class.java, CustomDataDeserializer())
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create()
     }
