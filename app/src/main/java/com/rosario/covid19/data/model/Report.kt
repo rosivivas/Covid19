@@ -1,6 +1,7 @@
 package com.rosario.covid19.data.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * Contain attributes to show specific data of COVID-19 by specific date
@@ -28,4 +29,4 @@ data class Report(
     var activeDiff: Int = 0,
     @SerializedName("fatality_rate")
     var fatalityRate: Double = 0.0
-)
+) : Serializable

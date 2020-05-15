@@ -5,8 +5,10 @@ import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.rosario.covid19.data.CustomDataDeserializer
 import com.rosario.covid19.data.CustomInterceptor
 import com.rosario.covid19.data.DataApi
+import com.rosario.covid19.data.model.DataResponse
 import com.rosario.covid19.util.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -36,6 +38,7 @@ class NetworkModule {
     fun provideGson(): Gson {
         return GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .registerTypeAdapter(DataResponse::class.java, CustomDataDeserializer())
             .create()
     }
 
@@ -62,10 +65,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitInterface(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofitInterface(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return  Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .client(okHttpClient)
             .build()

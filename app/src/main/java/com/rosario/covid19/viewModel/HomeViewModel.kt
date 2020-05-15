@@ -4,12 +4,7 @@ import androidx.lifecycle.*
 import com.rosario.covid19.data.model.DataResponse
 import com.rosario.covid19.domain.ReportUseCase
 import com.rosario.covid19.util.Resource
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -22,7 +17,6 @@ class HomeViewModel @Inject constructor(
 
     var confirmed = MutableLiveData<String>().apply { postValue("") }
     var deaths = MutableLiveData<String>().apply { postValue("") }
-    lateinit var reportLiveData: LiveData<Resource<DataResponse>>
     var reportMutableLiveData =
         MutableLiveData<Resource<DataResponse>>().apply { postValue(Resource.loading(data = null)) }
 

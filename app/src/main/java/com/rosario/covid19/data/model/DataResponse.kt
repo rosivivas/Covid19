@@ -1,10 +1,8 @@
 package com.rosario.covid19.data.model
 
-import com.google.gson.annotations.JsonAdapter
-import com.rosario.covid19.data.ReportTypeAdapter
+import java.io.Serializable
 
 /**
  * Contain report data
  */
-@JsonAdapter(ReportTypeAdapter::class)
-class DataResponse(var data: Report)
+class DataResponse(var data: Report): Serializable
