@@ -107,13 +107,16 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         progressBarHome.visibility = View.GONE
+                        errorText.visibility = View.GONE
                         resource.data?.let { report -> showData(report) }
                     }
                     Status.ERROR -> {
                         progressBarHome.visibility = View.GONE
-                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                        errorText.visibility = View.VISIBLE
+                        errorText.text = Util().handleError(it.error!!,this)
                     }
                     Status.LOADING -> {
+                        errorText.visibility = View.GONE
                         progressBarHome.visibility = View.VISIBLE
                     }
                 }

@@ -5,7 +5,6 @@ import com.rosario.covid19.data.model.DataResponse
 import com.rosario.covid19.domain.ReportUseCase
 import com.rosario.covid19.util.Resource
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -29,8 +28,8 @@ class HomeViewModel @Inject constructor(
             reportMutableLiveData.postValue(Resource.loading(data = null))
             try {
                 reportMutableLiveData.postValue(Resource.success(data = reportUseCase.getReport(date)))
-            } catch (e: Exception) {
-                reportMutableLiveData.postValue(Resource.error(data = null, message = e.message.toString()))
+            } catch (e: Throwable) {
+                reportMutableLiveData.postValue(Resource.error(data = null, error = e))
             }
         }
     }

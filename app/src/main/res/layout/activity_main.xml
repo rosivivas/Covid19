@@ -48,6 +48,15 @@
             app:layout_constraintTop_toBottomOf="@+id/casesConfirmedText"
             tools:text="Muertes confirmados" />
 
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/imageHome"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <ImageView
             android:id="@+id/imageHome"
             android:layout_width="200dp"

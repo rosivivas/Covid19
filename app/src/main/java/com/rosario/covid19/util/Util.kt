@@ -1,9 +1,10 @@
 package com.rosario.covid19.util
 
 import android.content.Context
+import android.provider.Settings.Global.getString
 import com.rosario.covid19.R
-import okhttp3.ResponseBody
-import retrofit2.adapter.rxjava2.HttpException
+import retrofit2.HttpException
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,15 +61,22 @@ class Util {
      * @param: it Throwable error
      * @return context activity Context
      */
-    fun handleError(it: Throwable?, context: Context): String? {
-        return if (it is HttpException)
-            when {
-                it.code() == 500 -> return context.resources.getString(R.string.error_500)
-                it.code() == 401 -> return context.resources.getString(R.string.error_401)
-                else -> context.resources.getString(R.string.error)
+    fun handleError(throwable: Throwable, context: Context): String? {
+        return when (throwable) {
+            is HttpException -> {
+                when {
+                    throwable.code() == 500 -> context.resources.getString(R.string.error_500)
+                    throwable.code() == 401 -> context.resources.getString(R.string.error_401)
+                    else -> context.resources.getString(R.string.error)
+                }
             }
-        else
-            return context.resources.getString(R.string.error)
-
+            is IOException -> {
+                context.resources.getString(R.string.network_error)
+            }
+            else -> {
+                context.resources.getString(R.string.error)
+            }
+        }
     }
+
 }
