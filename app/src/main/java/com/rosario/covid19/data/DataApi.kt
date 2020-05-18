@@ -13,6 +13,6 @@ import retrofit2.http.Query
  */
 interface DataApi {
     @GET("reports/total")
-    suspend fun getReport(@Query("date") map: String): DataResponse
+    suspend fun getReport(@Query("date") date: String): DataResponse
 
 }

@@ -4,9 +4,9 @@ data class Resource<out T>(val status: Status, val data: T?, val error: Throwabl
     companion object {
         fun <T> success(data: T): Resource<T> = Resource(status = Status.SUCCESS, data = data, error = null)
 
-        fun <T> error(data: T?, error: Throwable): Resource<T> =
-            Resource(status = Status.ERROR, data = data, error = error)
+        fun <T> error( error: Throwable): Resource<T> =
+            Resource(status = Status.ERROR, data = null, error = error)
 
-        fun <T> loading(data: T?): Resource<T> = Resource(status = Status.LOADING, data = data, error = null)
+        fun <T> loading(): Resource<T> = Resource(status = Status.LOADING, data = null, error = null)
     }
 }

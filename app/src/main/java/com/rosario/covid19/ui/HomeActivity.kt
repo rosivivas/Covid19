@@ -28,7 +28,8 @@ import javax.inject.Inject
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityMainBinding
-    var selectedDate = ""
+    private val calendar = Calendar.getInstance()
+    val util = Util()
 
     @Inject
     lateinit var homeViewModel: HomeViewModel
@@ -49,8 +50,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadYesterdayData() {
-        dateTitleText.text = Util().getYesterdayDateUser(Calendar.getInstance())
-        homeViewModel.getReport(Util().getYesterdayDate(Calendar.getInstance()))
+        dateTitleText.text = util.getYesterdayDateUser(calendar)
+        homeViewModel.getReport(util.getYesterdayDate(calendar))
     }
 
     private fun prepareElements() {
@@ -60,45 +61,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.buttonDisplayCalendar -> {
-                showDatePicker()
+                util.showDatePicker(this) { dateServer, dateUser ->
+                    homeViewModel.getReport(dateServer)
+                    dateTitleText.text = dateUser
+                }
             }
         }
-    }
-
-    /**
-     * Show date picker dialog and set max date
-     */
-    private fun showDatePicker() {
-        val calendar = Calendar.getInstance()
-        try {
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val date: Date = simpleDateFormat.parse(selectedDate)
-            calendar.timeInMillis = date.time
-        } catch (e: Exception) {
-            Log.e("Error", e.message)
-        }
-
-        val yearCal = calendar.get(Calendar.YEAR)
-        val monthCal = calendar.get(Calendar.MONTH)
-        val dayCal = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(
-            this,
-            OnDateSetListener { _, year, month, day ->
-                calendar.set(Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, month)
-                calendar.set(Calendar.DAY_OF_MONTH, day)
-                dateTitleText.text = Util().userFormatDate(calendar)
-                selectedDate = Util().dateFormat(calendar)
-                homeViewModel.getReport(selectedDate)
-            },
-            yearCal,
-            monthCal,
-            dayCal
-        )
-        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
-        datePickerDialog.show()
-
     }
 
     private fun viewObservers() {
@@ -113,7 +81,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                     Status.ERROR -> {
                         progressBarHome.visibility = View.GONE
                         errorText.visibility = View.VISIBLE
-                        errorText.text = Util().handleError(it.error!!,this)
+                        errorText.text = util.handleError(it.error!!,this)
                     }
                     Status.LOADING -> {
                         errorText.visibility = View.GONE

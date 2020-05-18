@@ -17,7 +17,7 @@ class HomeViewModel @Inject constructor(
     var confirmed = MutableLiveData<String>().apply { postValue("") }
     var deaths = MutableLiveData<String>().apply { postValue("") }
     var reportMutableLiveData =
-        MutableLiveData<Resource<DataResponse>>().apply { postValue(Resource.loading(data = null)) }
+        MutableLiveData<Resource<DataResponse>>().apply { postValue(Resource.loading()) }
 
     /**
      *  Get data from server
@@ -25,11 +25,11 @@ class HomeViewModel @Inject constructor(
      */
     fun getReport(date: String) {
         viewModelScope.launch {
-            reportMutableLiveData.postValue(Resource.loading(data = null))
+            reportMutableLiveData.postValue(Resource.loading())
             try {
                 reportMutableLiveData.postValue(Resource.success(data = reportUseCase.getReport(date)))
             } catch (e: Throwable) {
-                reportMutableLiveData.postValue(Resource.error(data = null, error = e))
+                reportMutableLiveData.postValue(Resource.error(error = e))
             }
         }
     }
