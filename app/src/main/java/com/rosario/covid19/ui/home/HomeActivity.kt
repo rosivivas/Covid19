@@ -1,24 +1,16 @@
-package com.rosario.covid19.ui
+package com.rosario.covid19.ui.home
 
-import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.rosario.covid19.R
-import com.rosario.covid19.data.model.DataResponse
 import com.rosario.covid19.databinding.ActivityMainBinding
 import com.rosario.covid19.util.Status
 import com.rosario.covid19.util.Util
-import com.rosario.covid19.viewModel.HomeViewModel
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -70,13 +62,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun viewObservers() {
-        homeViewModel.reportMutableLiveData.observe(this, Observer {
+        homeViewModel.fetchReportViewDataLiveData.observe(this, Observer {
             it.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
                         progressBarHome.visibility = View.GONE
                         errorText.visibility = View.GONE
-                        resource.data?.let { report -> showData(report) }
                     }
                     Status.ERROR -> {
                         progressBarHome.visibility = View.GONE
@@ -92,10 +83,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    private fun showData(report: DataResponse) {
-        casesConfirmedText.text = String.format(getString(R.string.cases_confirmed), report.data.confirmedCases)
-        casesDeathText.text = String.format(getString(R.string.deaths_confirmed), report.data.deathsCases)
-    }
 }
 
 

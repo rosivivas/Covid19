@@ -10,6 +10,6 @@ import javax.inject.Singleton
 @Singleton
 class ReportUseCase @Inject constructor(private val dataApi: DataApi) {
 
-    suspend fun getReport(date: String) = dataApi.getReport(date)
+    suspend fun getReportData(date: String) = dataApi.getReportDataApi(date)
 
 }

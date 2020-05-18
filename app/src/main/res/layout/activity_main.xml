@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.rosario.covid19.viewModel.HomeViewModel" />
+            type="com.rosario.covid19.ui.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.HomeActivity">
+        tools:context=".ui.home.HomeActivity">
 
         <TextView
             android:id="@+id/dateTitleText"
@@ -23,7 +26,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Date"/>
+            tools:text="Date" />
 
         <TextView
             android:id="@+id/casesConfirmedText"
@@ -32,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:text="@{viewModel.confirmed}"
+            android:text="@{String.format(@string/cases_confirmed,viewModel.reportLiveData.confirmedCases)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dateTitleText"
             tools:text="Casos confirmados" />
@@ -43,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16sp"
-            android:text="@{viewModel.deaths}"
+            android:text="@{String.format(@string/deaths_confirmed,viewModel.reportLiveData.deathsCases)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/casesConfirmedText"
             tools:text="Muertes confirmados" />
