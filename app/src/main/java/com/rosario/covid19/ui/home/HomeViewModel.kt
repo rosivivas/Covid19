@@ -6,6 +6,7 @@ import com.rosario.covid19.ui.model.MapperReport
 import com.rosario.covid19.ui.model.ReportViewData
 import com.rosario.covid19.util.Resource
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -18,13 +19,9 @@ class HomeViewModel @Inject constructor(
     var fetchReportViewDataLiveData =
         MutableLiveData<Resource<ReportViewData>>()
 
-    private val reportLiveData = MutableLiveData<ReportViewData>()
+    val reportViewData: LiveData<Resource<ReportViewData>>?
+        get() = fetchReportViewDataLiveData
 
-    var reportViewData: LiveData<ReportViewData>
-        get() = reportLiveData
-        set(value) {
-            reportLiveData.value = value.value
-        }
 
     /**
      *  Get data from server
@@ -36,7 +33,6 @@ class HomeViewModel @Inject constructor(
             try {
                 val reportViewData = MapperReport().mapper(reportUseCase.getReportData(date))
                 fetchReportViewDataLiveData.postValue(Resource.success(data = reportViewData))
-                reportLiveData.value = reportViewData
             } catch (e: Throwable) {
                 fetchReportViewDataLiveData.postValue(Resource.error(error = e))
             }
