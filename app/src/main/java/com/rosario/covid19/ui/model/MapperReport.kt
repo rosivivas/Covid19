@@ -5,18 +5,20 @@ import com.rosario.covid19.util.Mapper
 
 class MapperReport : Mapper<DataResponse, ReportViewData>() {
     override fun mapper(inputElement: DataResponse): ReportViewData {
-        return ReportViewData(
-            date = inputElement.data.date,
-            lastUpdate = inputElement.data.lastUpdate,
-            confirmedCases = inputElement.data.confirmedCases,
-            confirmedDiff = inputElement.data.confirmedDiff,
-            deathsCases = inputElement.data.deathsCases,
-            deathsDiff = inputElement.data.deathsDiff,
-            recoveredCases = inputElement.data.recoveredCases,
-            recoveredDiff = inputElement.data.recoveredDiff,
-            casesActive = inputElement.data.casesActive,
-            activeDiff = inputElement.data.activeDiff,
-            fatalityRate = inputElement.data.fatalityRate
-        )
+        val reportViewData = ReportViewData()
+        reportViewData.let {
+            it.date = inputElement.data.date
+            it.lastUpdate = inputElement.data.lastUpdate
+            it.confirmedCases = inputElement.data.confirmedCases
+            it.confirmedDiff = inputElement.data.confirmedDiff
+            it.deathsCases = inputElement.data.deathsCases
+            it.deathsDiff = inputElement.data.deathsDiff
+            it.recoveredCases = inputElement.data.recoveredCases
+            it.recoveredDiff = inputElement.data.recoveredDiff
+            it.casesActive = inputElement.data.casesActive
+            it.activeDiff = inputElement.data.activeDiff
+            it.fatalityRate = inputElement.data.fatalityRate
+        }
+        return reportViewData
     }
 }

@@ -17,13 +17,13 @@ class HomeViewModel @Inject constructor(
 
     var fetchReportViewDataLiveData =
         MutableLiveData<Resource<ReportViewData>>()
-    var reportLiveData =
-        MutableLiveData<ReportViewData>()
 
-    var reportViewDataValue: ReportViewData
-        get() = reportLiveData.value ?: ReportViewData()
+    private val reportLiveData = MutableLiveData<ReportViewData>()
+
+    var reportViewData: LiveData<ReportViewData>
+        get() = reportLiveData
         set(value) {
-            reportLiveData.value = value
+            reportLiveData.value = value.value
         }
 
     /**
@@ -33,10 +33,10 @@ class HomeViewModel @Inject constructor(
     fun getReport(date: String) {
         viewModelScope.launch {
             fetchReportViewDataLiveData.postValue(Resource.loading())
-
             try {
-                reportViewDataValue = MapperReport().mapper(reportUseCase.getReportData(date))
-                fetchReportViewDataLiveData.postValue(Resource.success(data = reportViewDataValue))
+                val reportViewData = MapperReport().mapper(reportUseCase.getReportData(date))
+                fetchReportViewDataLiveData.postValue(Resource.success(data = reportViewData))
+                reportLiveData.value = reportViewData
             } catch (e: Throwable) {
                 fetchReportViewDataLiveData.postValue(Resource.error(error = e))
             }
