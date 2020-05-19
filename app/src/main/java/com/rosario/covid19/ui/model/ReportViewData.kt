@@ -1,9 +1,5 @@
 package com.rosario.covid19.ui.model
 
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
-import com.rosario.covid19.BR
-
 
 data class ReportViewData(var date: String = "",
                           var lastUpdate: String = "",
@@ -16,6 +12,5 @@ data class ReportViewData(var date: String = "",
                           var casesActive: Int = 0,
                           var activeDiff: Int = 0,
                           var fatalityRate: Double = 0.0) {
-
 
 }
