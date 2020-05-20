@@ -1,6 +1,6 @@
 package com.rosario.covid19.di.module
 
-import com.rosario.covid19.ui.HomeActivity
+import com.rosario.covid19.ui.home.HomeActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

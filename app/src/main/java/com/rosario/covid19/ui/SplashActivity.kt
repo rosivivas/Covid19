@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.Window
 import android.view.WindowManager
 import com.rosario.covid19.R
+import com.rosario.covid19.ui.home.HomeActivity
 
 /**
  * Splash Activity to init app

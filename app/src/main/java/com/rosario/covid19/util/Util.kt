@@ -1,9 +1,11 @@
 package com.rosario.covid19.util
 
+import android.app.DatePickerDialog
 import android.content.Context
+import android.util.Log
 import com.rosario.covid19.R
-import okhttp3.ResponseBody
-import retrofit2.adapter.rxjava2.HttpException
+import retrofit2.HttpException
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -12,17 +14,21 @@ import java.util.*
  */
 class Util {
     val serverFormat = "yyyy-MM-dd"
-    val sdf = SimpleDateFormat(serverFormat, Locale.getDefault())
     val userFormat = "dd MMMM yyyy"
-    val userSdf = SimpleDateFormat(userFormat, Locale.getDefault())
+    val dayValueInMillis = (24 * 60 * 60 * 1000)
+    val simpleDateFormatServer = SimpleDateFormat(serverFormat, Locale.getDefault())
+    val simpleDateFormatForUser = SimpleDateFormat(userFormat, Locale.getDefault())
+    var selectedDateServer = ""
+    var selectedDateByUser = ""
+
 
     /**
      * Obtain date to send date to server
      * @param: cal calendar instance
      * @return date in String
      */
-    fun dateFormat(cal: Calendar): String {
-        return sdf.format(cal.time)
+    private fun dateFormat(cal: Calendar): String {
+        return simpleDateFormatServer.format(cal.time)
     }
 
 
@@ -33,7 +39,7 @@ class Util {
      */
     fun getYesterdayDate(cal: Calendar): String {
         cal.add(Calendar.DATE, -1)
-        return sdf.format(cal.time)
+        return simpleDateFormatServer.format(cal.time)
     }
 
     /**
@@ -43,7 +49,7 @@ class Util {
      */
     fun getYesterdayDateUser(cal: Calendar): String {
         cal.add(Calendar.DATE, -1)
-        return userSdf.format(cal.time)
+        return simpleDateFormatForUser.format(cal.time)
     }
 
     /**
@@ -51,8 +57,8 @@ class Util {
      * @param: cal calendar instance
      * @return date in String
      */
-    fun userFormatDate(cal: Calendar): String {
-        return userSdf.format(cal.time)
+    private fun userFormatDate(cal: Calendar): String {
+        return simpleDateFormatForUser.format(cal.time)
     }
 
     /**
@@ -60,15 +66,56 @@ class Util {
      * @param: it Throwable error
      * @return context activity Context
      */
-    fun handleError(it: Throwable?, context: Context): String? {
-        return if (it is HttpException)
-            when {
-                it.code() == 500 -> return context.resources.getString(R.string.error_500)
-                it.code() == 401 -> return context.resources.getString(R.string.error_401)
-                else -> context.resources.getString(R.string.error)
+    fun handleError(throwable: Throwable, context: Context): String? {
+        return when (throwable) {
+            is HttpException -> {
+                when (throwable.code()) {
+                    500 -> context.resources.getString(R.string.error_500)
+                    401 -> context.resources.getString(R.string.error_401)
+                    else -> context.resources.getString(R.string.error)
+                }
             }
-        else
-            return context.resources.getString(R.string.error)
-
+            is IOException -> {
+                context.resources.getString(R.string.network_error)
+            }
+            else -> {
+                context.resources.getString(R.string.error)
+            }
+        }
     }
+
+    fun showDatePicker(context: Context, callback: (String, String) -> Unit) {
+        val calendar = Calendar.getInstance()
+        try {
+            val date: Date = simpleDateFormatServer.parse(selectedDateServer)
+            calendar.timeInMillis = date.time
+        } catch (e: Exception) {
+            Log.e("Error", e.message)
+        }
+
+        val yearCal = calendar.get(Calendar.YEAR)
+        val monthCal = calendar.get(Calendar.MONTH)
+        val dayCal = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            context,
+            DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                calendar.let {
+                    it.set(Calendar.YEAR, year)
+                    it.set(Calendar.MONTH, month)
+                    it.set(Calendar.DAY_OF_MONTH, day)
+                }
+
+                selectedDateByUser = userFormatDate(calendar)
+                selectedDateServer = dateFormat(calendar)
+                callback.invoke(selectedDateServer, selectedDateByUser)
+            },
+            yearCal,
+            monthCal,
+            dayCal
+        )
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis() - dayValueInMillis
+        datePickerDialog.show()
+    }
+
 }
