@@ -53,7 +53,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener,
     private fun prepareElements() {
         buttonDisplayCalendar.setOnClickListener(this)
         swipeRefreshLayoutHome.setOnRefreshListener(this)
-        swipeRefreshLayoutHome.setProgressViewOffset(false,-200,-200)
+        swipeRefreshLayoutHome.setProgressViewOffset(false, -200, -200)
     }
 
     override fun onClick(v: View?) {
@@ -74,20 +74,30 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener,
                 when (resource.status) {
                     Status.SUCCESS -> {
                         progressBarHome.visibility = View.GONE
-                        errorText.visibility = View.GONE
+                        errorTextVisibility(false)
                     }
                     Status.ERROR -> {
                         progressBarHome.visibility = View.GONE
-                        errorText.visibility = View.VISIBLE
+                        errorTextVisibility(true)
                         errorText.text = util.handleError(it.error!!, this)
                     }
                     Status.LOADING -> {
-                        swipeRefreshLayoutHome.isRefreshing = false
-                        errorText.visibility = View.GONE
+                        errorTextVisibility(false)
                         progressBarHome.visibility = View.VISIBLE
                     }
                 }
             }
+        })
+
+        homeViewModel.emptyLiveData.observe(this, Observer {
+            if (it) {
+                errorText.text = resources.getString(R.string.empty_data)
+                errorTextVisibility(true)
+            } else {
+                errorTextVisibility(false)
+
+            }
+
         })
     }
 
@@ -98,6 +108,13 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener,
     override fun onRefresh() {
         getReportByUserSelectedDate()
         swipeRefreshLayoutHome.isRefreshing = false
+    }
+
+    private fun errorTextVisibility(state: Boolean) {
+        if (state)
+            errorText.visibility = View.VISIBLE
+        else
+            errorText.visibility = View.GONE
 
     }
 
