@@ -7,5 +7,6 @@
     <string name="error">Hubo un error. Vuelve a intentarlo</string>
     <string name="error_500">Error en el serrvidor</string>
     <string name="error_401">No está autorizado</string>
-    <string name="network_error">There is a problem with the netwrok</string>
+    <string name="network_error">Ha ocurrido un problema con la red</string>
+    <string name="empty_data">No hay datos para mostrar</string>
 </resources>

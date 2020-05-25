@@ -23,6 +23,8 @@ class HomeViewModel @Inject constructor(
 
     var reportData = ReportViewData()
 
+    var emptyLiveData = MutableLiveData<Boolean>()
+
     /**
      *  Get data from server
      * @param date
@@ -33,9 +35,17 @@ class HomeViewModel @Inject constructor(
             try {
                 reportData = MapperReport().mapper(reportUseCase.getReportData(date))
                 fetchReportViewDataLiveData.postValue(Resource.success(data = reportData))
+                verifyEmptyData(reportData)
             } catch (e: Throwable) {
                 fetchReportViewDataLiveData.postValue(Resource.error(error = e))
             }
         }
+    }
+
+    private fun verifyEmptyData(reportData: ReportViewData) {
+        if (reportData.confirmedCases == 0 && reportData.deathsCases == 0)
+            emptyLiveData.postValue(true)
+        else
+            emptyLiveData.postValue(false)
     }
 }

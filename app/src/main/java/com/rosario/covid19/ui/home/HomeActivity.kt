@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.rosario.covid19.R
 import com.rosario.covid19.databinding.ActivityMainBinding
 import com.rosario.covid19.util.Status
@@ -17,10 +18,12 @@ import javax.inject.Inject
 /**
  * Handle UI for Home
  */
-class HomeActivity : AppCompatActivity(), View.OnClickListener {
+class HomeActivity : AppCompatActivity(), View.OnClickListener,
+    SwipeRefreshLayout.OnRefreshListener {
 
     lateinit var binding: ActivityMainBinding
     private val calendar = Calendar.getInstance()
+    private var userSelectedDate = ""
     val util = Util()
 
     @Inject
@@ -42,12 +45,15 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadYesterdayData() {
+        userSelectedDate = util.getYesterdayDate(calendar)
         dateTitleText.text = util.getYesterdayDateUser(calendar)
-        homeViewModel.getReport(util.getYesterdayDate(calendar))
+        getReportByUserSelectedDate()
     }
 
     private fun prepareElements() {
         buttonDisplayCalendar.setOnClickListener(this)
+        swipeRefreshLayoutHome.setOnRefreshListener(this)
+        swipeRefreshLayoutHome.setProgressViewOffset(false, -200, -200)
     }
 
     override fun onClick(v: View?) {
@@ -55,6 +61,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             R.id.buttonDisplayCalendar -> {
                 util.showDatePicker(this) { dateServer, dateUser ->
                     homeViewModel.getReport(dateServer)
+                    userSelectedDate = dateServer
                     dateTitleText.text = dateUser
                 }
             }
@@ -67,20 +74,48 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         progressBarHome.visibility = View.GONE
-                        errorText.visibility = View.GONE
+                        errorTextVisibility(false)
                     }
                     Status.ERROR -> {
                         progressBarHome.visibility = View.GONE
-                        errorText.visibility = View.VISIBLE
-                        errorText.text = util.handleError(it.error!!,this)
+                        errorTextVisibility(true)
+                        errorText.text = util.handleError(it.error!!, this)
                     }
                     Status.LOADING -> {
-                        errorText.visibility = View.GONE
+                        errorTextVisibility(false)
                         progressBarHome.visibility = View.VISIBLE
                     }
                 }
             }
         })
+
+        homeViewModel.emptyLiveData.observe(this, Observer {
+            if (it) {
+                errorText.text = resources.getString(R.string.empty_data)
+                errorTextVisibility(true)
+            } else {
+                errorTextVisibility(false)
+
+            }
+
+        })
+    }
+
+    private fun getReportByUserSelectedDate() {
+        homeViewModel.getReport(userSelectedDate)
+    }
+
+    override fun onRefresh() {
+        getReportByUserSelectedDate()
+        swipeRefreshLayoutHome.isRefreshing = false
+    }
+
+    private fun errorTextVisibility(state: Boolean) {
+        if (state)
+            errorText.visibility = View.VISIBLE
+        else
+            errorText.visibility = View.GONE
+
     }
 
 }
